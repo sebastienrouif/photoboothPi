@@ -16,18 +16,14 @@ Follow the steps to flash you sdCard with [raspbian](https://www.raspberrypi.org
 Checkout or Download the project on the pi then open a terminal from the photoboothPi/pi folder
 1. NPM server
 
-
-   	npm init
-    npm install express socket.io --save
-    npm install raspistill --save
-    sudo apt-get install libgphoto2-dev
-    sudo apt-get install libgphoto2-2-dev
-    npm install gphoto2 --save
-    npm install onoff --save
+    
+    npm install
     
 2. Install Nan version of gphoto2
 
-gphoto2 doesn't work on Raspberry Pi https://github.com/lwille/node-gphoto2/issues/67 so you'll have to install the Nan branch.
+install gphoto2 using https://github.com/gonzalo/gphoto2-updater 
+
+node-gphoto2 doesn't work on Raspberry Pi https://github.com/lwille/node-gphoto2/issues/67 so you'll have to install the Nan branch.
  
  
 	mkdir gphoto2Nan
@@ -35,12 +31,20 @@ gphoto2 doesn't work on Raspberry Pi https://github.com/lwille/node-gphoto2/issu
 	git clone git@github.com:lwille/node-gphoto2.git && cd node-gphoto2
 	git checkout feature/nan
 	npm install
-	npm link
+	sudo npm link
 	# cd to your project directory
-	npm link gphoto2
+	sudo npm link gphoto2
 
 Disable gphoto2 from automatically mounting the camera :
 in /usr/lib/gvfs/ rename gvfsd-gphoto2 and gvfs-gphoto2-volume-monitor
+
+3. Run the node server
+
+
+    cd pi/
+    node index.js
+    
+you can connect to it through localhost http://127.0.0.1:3000 
 
 #Connect the DSLR
 Easiest step just plug your DSLR to the Pi via usb.
@@ -54,16 +58,19 @@ share over USB : http://elinux.org/How_to_use_an_Android_tablet_as_a_Raspberry_P
 
 
     nano /etc/network/interfaces
+    add this add the end : 
         allow-hotplug usb0
+        iface usb0 inet static
+            address 192.168.42.10
+            netmask 255.255.255.0
 
-	iface usb0 inet static
-	    address 192.168.42.10
-	    netmask 255.255.255.0
+3. Enable USB tethering
+On the android Tablet navigate to : Settings → Connections → Tethering and Wi-Fi hotspot → USB tethering
 
-3. Test
+4. Test
 Use you web browser to connect to http://192.168.42.10:3000 
 
-4. Tip 
+5. Tip 
 you can then use the tablet to connect to the Pi [through VNC](http://elinux.org/Display_a_Raspbian_desktop_on_Android_using_VNC) 
 
 ## Option 2 : make your Pi a Wifi hotspot
@@ -71,7 +78,7 @@ you can then use the tablet to connect to the Pi [through VNC](http://elinux.org
 
 #Use the Android app
 - Download the app from the Pi :  http://192.168.42.10:3000/static/app-debug.apk
-- Install and run it
+- Install and run it ( you might have to enable unknown sources)
 - There is a hidden button on the bottom right corner to change the IP of the server
 - Tapping the screen should start the countdown, take a picture and display the picture
 
@@ -81,3 +88,10 @@ you can then use the tablet to connect to the Pi [through VNC](http://elinux.org
  https://github.com/androidthings/sample-button
 
 #Make it run on boot
+
+
+#Versions used when runing :
+npm -v 5.3.0
+node -v 8.2.1
+uname -a linux raspberrypi 4.9.35-v7+ #1014 SMP Fri June 30 14:47:43 BST 2017 armv71 GNU/Linux
+

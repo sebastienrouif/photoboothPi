@@ -10,7 +10,6 @@
   "license": "MIT",
   "dependencies": {
     "express": "^4.15.4",
-    "node-raspistill": "0.0.14",
     "onoff": "^1.1.5",
     "socket.io": "^1.7.4"
   }
